@@ -1,5 +1,9 @@
 #![warn(clippy::match_ref_pats)]
 
+fn to_u16(msb_lsb: [u8; 2]) -> u16 {
+    u16::from_be_bytes(msb_lsb)
+}
+
 fn ref_pats() {
     {
         let v = &Some(0);
@@ -39,6 +43,17 @@ fn ref_pats() {
     let b = Some(0);
     if let &None = &b {
         println!("none");
+    }
+
+    let arr = [0u8, 1u8];
+    match &arr {
+        &[b0, b1] => {
+            let _ = to_u16([b0, b1]);
+        },
+        &[b0, 0] => {
+            let _ = to_u16([b0, 0u8]);
+        },
+        _ => {},
     }
 }
 
